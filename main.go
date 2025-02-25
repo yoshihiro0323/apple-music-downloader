@@ -44,6 +44,7 @@ var (
 	atmos_max       *int
 	aac_type        *string
 	output_filename *string
+	output_dir      *string
 	Config          structs.ConfigSet
 	counter         structs.Counter
 	okDict          = make(map[string][]int)
@@ -705,6 +706,12 @@ func rip(albumId string, token string, storefront string, mediaUserToken string,
 		saveFolder = Config.AlacSaveFolder
 	}
 
+	// ユーザーが指定した出力ディレクトリがある場合はそれを使用
+	if *output_dir != "" {
+		saveFolder = *output_dir
+		fmt.Println("Custom output directory applied:", *output_dir)
+	}
+
 	// 保存先を直接outputフォルダに設定
 	sanAlbumFolder := saveFolder
 	os.MkdirAll(sanAlbumFolder, os.ModePerm)
@@ -1071,6 +1078,7 @@ func main() {
 	atmos_max = pflag.Int("atmos-max", Config.AtmosMax, "Specify the max quality for download atmos")
 	aac_type = pflag.String("aac-type", Config.AacType, "Select AAC type, aac aac-binaural aac-downmix")
 	output_filename = pflag.StringP("filename", "f", "", "Specify the output filename")
+	output_dir = pflag.StringP("output-dir", "o", "", "Specify the output directory")
 	// Custom usage message for help
 	pflag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s [options] url1 url2 ...\n", "[main | main.exe | go run main.go]")
