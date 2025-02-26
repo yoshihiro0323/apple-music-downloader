@@ -1,6 +1,6 @@
-const axios = require('../$node_modules/axios/index.cjs');
+const axios = require('axios');
 const { URL } = require('url');
-const { Parser } = require('../$node_modules/m3u8-parser/dist/m3u8-parser.cjs.js');
+const { Parser } = require('m3u8-parser');
 
 /**
  * Apple MusicのURLからストアフロントとIDを抽出します
@@ -8,6 +8,19 @@ const { Parser } = require('../$node_modules/m3u8-parser/dist/m3u8-parser.cjs.js
  * @returns {Object|null} ストアフロントとID、タイプを含むオブジェクト、または無効なURLの場合はnull
  */
 function parseAppleMusicUrl(url) {
+  // アルバム内の曲URLのパターン（?i=パラメータを含むURL）
+  const albumSongPattern = /^(?:https:\/\/(?:beta\.music|music)\.apple\.com\/(\w{2})\/album\/[^\/]+\/[^?]+)\?i=(\d+)/;
+  const albumSongMatch = url.match(albumSongPattern);
+  
+  if (albumSongMatch) {
+    return {
+      type: 'song',
+      storefront: albumSongMatch[1],
+      id: albumSongMatch[2],
+      url
+    };
+  }
+
   // アルバムURLのパターン
   const albumPattern = /^(?:https:\/\/(?:beta\.music|music)\.apple\.com\/(\w{2})(?:\/album|\/album\/.+))\/(?:id)?(\d[^\D]+)(?:$|\?)/;
   const albumMatch = url.match(albumPattern);

@@ -7,7 +7,7 @@ async function runExamples() {
     console.log('==============================');
     
     // 1. URLの解析
-    const url = 'https://music.apple.com/us/album/the-beautiful-game/1160118965';
+    const url = 'https://music.apple.com/us/album/tonight-you-sleep-under-the-moon/1794229408?i=1794229409';
     console.log(`\n1. URLの解析: ${url}`);
     const urlInfo = appleMusicDownloader.parseUrl(url);
     console.log(urlInfo);
